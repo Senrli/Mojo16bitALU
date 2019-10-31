@@ -1,0 +1,39 @@
+module alu_simple (
+    input alufn[6],  // clock
+    input a[16],
+    input b[16],
+    output alu[16],
+    output z,
+    output v,
+    output n
+  ) {
+
+
+
+  
+  .a(a), .b(b), .alufn(alufn){
+    hex_cmp cmp;
+    hex_add add;
+  hex_boole boole;
+  hex_shift shift;   
+      }  
+  
+  cmp.z = add.z;
+  
+  always {
+
+    case(alufn[5:4]){
+      b00:
+        alu = cmp.out;
+        alu.z = z;
+        v = alu.v;
+        n = alu.n;
+      b01:
+        s = a - b;
+      b10:
+        s = a * b;
+      b10:
+           
+      }
+  }
+}

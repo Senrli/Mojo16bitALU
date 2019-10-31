@@ -1,0 +1,10 @@
+module hex_alutester (
+    input in,  // clock
+    input rst,  // reset
+    output out
+  ) {
+
+  always {
+    out = 0;
+  }
+}

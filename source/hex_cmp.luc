@@ -1,0 +1,23 @@
+module hex_cmp (
+    input alufn[6],  // alfn[5:0]
+    input z, 
+    input v, 
+    input n, 
+    output out  // output binary value comp
+    
+  ) {
+
+  always {
+    case(alufn[2:1])
+    {
+      b01:
+        out = z; // comeq
+      b10:
+        out = n ^ v; //complt
+      b11:
+        out = z | (n ^ v); //comle
+      default:
+        out = 0;
+    }    
+  }
+}

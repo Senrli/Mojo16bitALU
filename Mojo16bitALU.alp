@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project name="Mojo16bitALU" board="Mojo" language="Lucid" version="2">
+  <files>
+    <src>alu_simple.luc</src>
+    <src>fa.luc</src>
+    <src>hex_add.luc</src>
+    <src>hex_shift.luc</src>
+    <src>hex_cmp.luc</src>
+    <component>reset_conditioner.luc</component>
+    <src>hex_boole.luc</src>
+    <src top="true">mojo_top.luc</src>
+    <src>hex_alutester.luc</src>
+    <constraint lib="true">io_shield.ucf</constraint>
+    <constraint lib="true">mojo.ucf</constraint>
+  </files>
+</project>
