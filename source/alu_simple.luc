@@ -9,31 +9,35 @@ module alu_simple (
   ) {
 
 
-
   
-  .a(a), .b(b), .alufn(alufn){
+  .alufn(alufn){
     hex_cmp cmp;
-    hex_add add;
-  hex_boole boole;
-  hex_shift shift;   
+    .a(a), .b(b){
+      hex_add add;
+      hex_boole boole;
+      hex_shift shift;   
       }  
-  
-  cmp.z = add.z;
-  
-  always {
+    }
 
+  always {
+    z = add.z;
+    v = add.v;
+    n = add.n;
+    cmp.z = add.z;
+    cmp.v = add.v;
+    cmp.n = add.n;
+  
     case(alufn[5:4]){
       b00:
-        alu = cmp.out;
-        alu.z = z;
-        v = alu.v;
-        n = alu.n;
+        alu = add.out;
       b01:
-        s = a - b;
+        alu = boole.out;
       b10:
-        s = a * b;
+        alu = shift.out;
       b10:
-           
+        alu = cmp.out;
+      default:
+        alu = 16h0000;
       }
   }
 }

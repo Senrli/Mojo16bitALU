@@ -11,11 +11,11 @@ module hex_cmp (
     case(alufn[2:1])
     {
       b01:
-        out = z; // comeq
+        out = z;            //comeq
       b10:
-        out = n ^ v; //complt
+        out = n ^ v;        //complt
       b11:
-        out = z | (n ^ v); //comle
+        out = z | (n ^ v);  //comle
       default:
         out = 0;
     }    

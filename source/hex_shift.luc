@@ -12,13 +12,13 @@ module hex_shift (
     case(alufn[1:0])
     {
       b00:
-        out = a << b; //shift left
+        out = a << b;            //shift left
       b01:
-        out = a >> b; //shift right
+        out = a >> b;            //shift right
       b10:
-        out = $signed(a) <<< b; //shift left with signed bit
+        out = $signed(a) <<< b;  //shift left with signed bit
       b11:
-        out = $signed(a) >>> b; //shift right with signed bit
+        out = $signed(a) >>> b;  //shift right with signed bit
       default:
         out = a; //default no change
     }

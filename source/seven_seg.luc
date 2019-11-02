@@ -1,0 +1,44 @@
+module seven_seg (
+    input char[8],
+    output segs[7]
+  ) {
+
+  always {
+    case (char) {
+      h0: segs = 7b0111111;
+      h1: segs = 7b0000110;
+      h2: segs = 7b1011011;
+      h3: segs = 7b1001111;
+      h4: segs = 7b1100110;
+      h5: segs = 7b1101101;
+      h6: segs = 7b1111101;
+      h7: segs = 7b0000111;
+      h8: segs = 7b1111111;
+      h9: segs = 7b1100111;
+    
+      ha: segs = 7b1110111;       //letter a
+      hb: segs = 7b1111100;       //letter b
+      hc: segs = 7b1011000;       //letter c
+      hd: segs = 7b1011110;       //letter d
+      he: segs = 7b1111011;       //letter e  
+      hf: segs = 7b1110001;       //letter f   
+      h10: segs = 7b0111101;       //letter g
+      h16: segs = 7b0110000;       //letter i
+      h17: segs = 7b0111000;       //letter l
+      h18: segs = 7b1110011;       //letter p
+      h27: segs = 7b0110011;        //letter r
+      h19: segs = 7b1101101;       //letter s
+      h20: segs = 7b1000000;       //symbol - 
+      
+      h21: segs = 7b0000001;       //first symbol for scrolling pattern
+      h22: segs = 7b0000010;       //second symbol for scrolling pattern
+      h23: segs = 7b0000100;       //third symbol for scrolling pattern
+      h24: segs = 7b0001000;       //
+      h25: segs = 7b0010000;
+      h26: segs = 7b0100000;
+      hff: segs = 7b0000000;       //blank
+      
+      default: segs = 7b0000000;
+    }
+  }
+}

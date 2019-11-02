@@ -14,13 +14,13 @@ module hex_add (
   always {
     case(alufn[1:0]){
       b00:
-        sum = a + b;
+        sum = a + b;            //addition
       b01:
-        sum = a - b;
+        sum = a - b;            //subtraction
       b10:
-        sum = a * b;
+        sum = a * b;            //multiplication
       b11:
-        sum = a - (a / b * b);
+        sum = a - (a / b * b);  //modulo
       default:
         sum = a + b;
       }
