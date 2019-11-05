@@ -1,7 +1,7 @@
 module hex_alutester (
     input clk,  // clock
     input rst,  // reset
-    input rst2, // reset for timer
+    //input rst2, // reset for timer
     input auto,
     input auto_fail,
     input manual,
@@ -17,8 +17,7 @@ module hex_alutester (
     {
 
       fsm state_main = {IDLE, AUTO, AUTO_FAIL, MANUAL};        //reset the device into IDLE state when reset button is pressed
-      .rst(rst2)                                      //reset the fsm when entering the zero state
-      {
+      
       dff a[16];
       dff b[16];
       dff alufn[6];
@@ -31,8 +30,8 @@ module hex_alutester (
                         CMP_1, CMP_2, CMP_3, 
                         SHIFT_1, SHIFT_2, SHIFT_3, SHIFT_4, 
                         PASS, PASS_NO, FAIL, FAIL_NO};  
-      fsm state_manual = {A, A_DISP, B, B_DISP, ALU, ALU_DISP,  RESULT, RESULT_DISP};
-      }
+      fsm state_manual = {A, A_DISP, B, B_DISP, ALU, ALU_DISP, RESULT, RESULT_DISP};
+      
     }
     
   }
@@ -286,10 +285,8 @@ module hex_alutester (
           state_manual.A:
             state = 1;
             data_bus_out = 0;
-            if (delay_counter.q == 49999999){
+            if (manual){
               state_manual.d = state_manual.A_DISP;
-              }else{
-              delay_counter.d = delay_counter.q + 1;
               }
             
           state_manual.A_DISP:
@@ -299,16 +296,13 @@ module hex_alutester (
             data_bus_out = a.q;
             if (manual){
               state_manual.d = state_manual.B;
-              delay_counter.d = 0;
               }
             
           state_manual.B:
             state = 3;
             data_bus_out = 0;
-            if (delay_counter.q == 49999999){
+            if (manual){
               state_manual.d = state_manual.B_DISP;
-              }else{
-              delay_counter.d = delay_counter.q + 1;
               }
             
           state_manual.B_DISP:
@@ -317,16 +311,14 @@ module hex_alutester (
             data_bus_out = b.q;
             if (manual){
               state_manual.d = state_manual.ALU;
-              delay_counter.d = 0;
+              
               }
             
           state_manual.ALU:
             state = 27;
             data_bus_out = 0;
-            if (delay_counter.q == 49999999){
+            if (manual){
               state_manual.d = state_manual.ALU_DISP;
-              }else{
-              delay_counter.d = delay_counter.q + 1;
               }
             
             
@@ -336,16 +328,14 @@ module hex_alutester (
             data_bus_out = alufn.q;
             if (manual){
               state_manual.d = state_manual.RESULT;
-              delay_counter.d = 0;
+              
               }
           
           state_manual.RESULT:
             state = 29;
             data_bus_out = 0;
-            if (delay_counter.q == 49999999){
+            if (manual){
               state_manual.d = state_manual.RESULT_DISP;
-              }else{
-              delay_counter.d = delay_counter.q + 1;
               }
             
           

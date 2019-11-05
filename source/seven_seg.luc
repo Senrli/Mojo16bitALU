@@ -18,9 +18,9 @@ module seven_seg (
     
       ha: segs = 7b1110111;       //letter a
       hb: segs = 7b1111100;       //letter b
-      hc: segs = 7b1011000;       //letter c
+      hc: segs = 7b0111001;       //letter c
       hd: segs = 7b1011110;       //letter d
-      he: segs = 7b1111011;       //letter e  
+      he: segs = 7b1111001;       //letter e  
       hf: segs = 7b1110001;       //letter f   
       h10: segs = 7b0111101;       //letter g
       h16: segs = 7b0110000;       //letter i

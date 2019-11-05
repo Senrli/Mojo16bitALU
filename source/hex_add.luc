@@ -24,9 +24,9 @@ module hex_add (
       default:
         sum = a + b;
       }
-    minus = a - b;
-    z = ~|minus;
-    v = (a[15] & ~b[15] & (~minus[15])) | ((~a[15])&(b[15])&minus[15]);
+
+    z = ~|sum;
+    v = (a[15] & (b[15]^alufn[0]) & (~sum[15])) | ((~a[15])& (~(b[15]^alufn[0])) & sum[15]);
     n = sum[15];
     out = sum;
   }
