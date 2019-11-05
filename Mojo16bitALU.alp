@@ -1,21 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project name="Mojo16bitALU" board="Mojo" language="Lucid" version="2">
   <files>
-    <src>hex_cmp.luc</src>
+    <src>true_lut.luc</src>
+    <src>alu_simple.luc</src>
     <src>hex_shift.luc</src>
-    <src>seven_seg.luc</src>
-    <src>multi_seven_seg.luc</src>
-    <src>hex_alutester.luc</src>
+    <src>hex_add.luc</src>
     <component>pipeline.luc</component>
     <component>counter.luc</component>
-    <src top="true">mojo_top.luc</src>
-    <src>hex_add.luc</src>
+    <src>multi_seven_seg.luc</src>
+    <src>dec_decoder.luc</src>
     <component>decoder.luc</component>
-    <src>hex_boole.luc</src>
-    <component>reset_conditioner.luc</component>
+    <src>seven_seg.luc</src>
     <src>fa.luc</src>
+    <src>hex_boole.luc</src>
+    <src>hex_cmp.luc</src>
+    <src top="true">mojo_top.luc</src>
     <src>disp_ctrl.luc</src>
-    <src>alu_simple.luc</src>
+    <src>hex_alutester.luc</src>
+    <component>reset_conditioner.luc</component>
     <component>button_conditioner.luc</component>
     <constraint lib="true">io_shield.ucf</constraint>
     <constraint lib="true">mojo.ucf</constraint>

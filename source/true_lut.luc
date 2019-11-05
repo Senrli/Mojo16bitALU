@@ -1,0 +1,12 @@
+module true_lut (
+    input state,
+    output alu_lut[16];
+    output z;
+    output v;
+    output n;
+  ) {
+
+  always {
+    out = 0;
+  }
+}

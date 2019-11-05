@@ -14,7 +14,11 @@ module disp_ctrl (
     }
   }
   
+  dec_decoder seven_seg_dec;
+ 
+  
   always {
+    seven_seg_dec.bin_in = data_bus;
     case (state){
       0:
         if (delay_counter.q == 2000000){
@@ -159,16 +163,16 @@ module disp_ctrl (
         seven_seg_out = {8d18, 8d11, 8d19, 8d19};        //pass
         disc_led_out = 3x{{8h00}};
       24:
-        seven_seg_out = {c{7h0,data_bus/10},c{7h0,(data_bus-(data_bus/10*10))},8hff,8hff};
+        seven_seg_out = {seven_seg_dec.out[1], seven_seg_dec.out[0], 8hff,8hff};
         disc_led_out = 3x{{8h00}};
       25:
         seven_seg_out = {8d14, 8d11, 8d16, 8d17};        //fail
         disc_led_out = 3x{{8h00}};
       26:
-        seven_seg_out = {c{7h0,data_bus/10},c{7h0,(data_bus-(data_bus/10*10))},8hff,8hff};
-        disc_led_out = 3x{{8h00}}
+        seven_seg_out = {seven_seg_dec.out[1], seven_seg_dec.out[0], 8hff,8hff};
+        disc_led_out = 3x{{8h00}};
       27:
-        seven_seg_out = {8de, 8d27, 8d27, 8dff};        //fail
+        seven_seg_out = {8he, 8h27, 8h27, 8hff};        //fail state, showing "err"
         disc_led_out = 3x{{8h00}};
       }
   }

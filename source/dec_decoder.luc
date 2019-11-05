@@ -1,0 +1,10 @@
+module dec_decoder (
+    input bin_in[16],  //binary input
+    output out[2][8] //output for the seven segment
+  ) {
+
+  always {
+    out[1] = bin_in/10;
+    out[0] = bin_in-(bin_in/10*10);
+  }
+}
