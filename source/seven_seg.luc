@@ -28,6 +28,7 @@ module seven_seg (
       h18: segs = 7b1110011;       //letter p
       h27: segs = 7b0110011;        //letter r
       h19: segs = 7b1101101;       //letter s
+      h28: segs = 7b0111110;        //letter u
       h20: segs = 7b1000000;       //symbol - 
       
       h21: segs = 7b0000001;       //first symbol for scrolling pattern

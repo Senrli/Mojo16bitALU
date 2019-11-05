@@ -1,12 +1,110 @@
 module true_lut (
-    input state,
-    output alu_lut[16];
-    output z;
-    output v;
-    output n;
+    input state[5],
+    output alu_lut[16],
+    output z,
+    output v,
+    output n
   ) {
 
   always {
-    out = 0;
+    case(state){
+      5: 
+        alu_lut = 16hdead + 16hbeef;
+        z = 0;
+        v = 1;
+        n = 0;
+      6: 
+        alu_lut = 16hdead - 16hbeef;
+        z = 0;
+        v = 0;
+        n = 0;
+      7: 
+        alu_lut = 16hdead * 16hbeef;
+        z = 0;
+        v = 0;
+        n = 0;
+      8: 
+        alu_lut = 16hdead - ( 16hdead/16hbeef * 16hbeef);
+        z = 0;
+        v = 0;
+        n = 0;
+      9: 
+        alu_lut = 16hdead & 16hbeef;
+        z = 0;
+        v = 0;
+        n = 0;
+      10: 
+        alu_lut = 16hdead | 16hbeef;
+        z = 0;
+        v = 0;
+        n = 0;
+      11: 
+        alu_lut = 16hdead ^ 16hbeef;
+        z = 0;
+        v = 0;
+        n = 0;
+      12: 
+        alu_lut = 16hdead;
+        z = 0;
+        v = 0;
+        n = 0;
+      13: 
+        alu_lut = ~(16hdead | 16hbeef);
+        z = 0;
+        v = 0;
+        n = 0;
+      14:
+        alu_lut = ~(16hdead & 16hbeef);
+        z = 0;
+        v = 0;
+        n = 0;
+      15: 
+        alu_lut = ~(16hdead ^ 16hbeef);
+        z = 0;
+        v = 0;
+        n = 0;
+      16:
+        alu_lut = 16hdead - 16hbeef;
+        z = 0;
+        v = 0;
+        n = 0;
+      17:
+        alu_lut = 16hdead - 16hbeef;
+        z = 0;
+        v = 0;
+        n = 0;
+      18:
+        alu_lut = 16hdead - 16hbeef;
+        z = 0;
+        v = 0;
+        n = 0;
+      19:
+        alu_lut = 160000;
+        z = 0;
+        v = 0;
+        n = 0;
+      20:
+        alu_lut = 160000;
+        z = 0;
+        v = 0;
+        n = 0;
+      21:
+        alu_lut = 161111;
+        z = 0;
+        v = 0;
+        n = 0;
+      22:
+        alu_lut = 161111;
+        z = 0;
+        v = 0;
+        n = 0;
+      default:
+        alu_lut = 160000;
+        z = 0;
+        v = 0;
+        n = 0;
+        
+    }
+    
   }
 }
