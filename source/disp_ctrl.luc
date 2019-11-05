@@ -14,8 +14,8 @@ module disp_ctrl (
     }
   }
   
+  
   dec_decoder seven_seg_dec;
- 
   
   always {
     seven_seg_dec.bin_in = data_bus[15:0];
@@ -106,58 +106,58 @@ module disp_ctrl (
         seven_seg_out = {c{4h0,data_bus[15:12]}, c{4h0,data_bus[11:8]}, c{4h0,data_bus[7:4]}, c{4h0,data_bus[3:0]}};
         disc_led_out = {8h00, data_bus[15:8], data_bus[7:0]};
       5:
-        seven_seg_out = {8hff, 8h0, 8h20, data_bus[16]?8h18:8hf};
+        seven_seg_out = {8hff, 8h0, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       6:
-        seven_seg_out = {8hff, 8h1, 8h20, data_bus[16]?8h18:8hf};
+        seven_seg_out = {8hff, 8h1, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       7:
-        seven_seg_out = {8hff, 8h2, 8h20, data_bus[16]?8h18:8hf};
+        seven_seg_out = {8hff, 8h2, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       8:
-        seven_seg_out = {8hff, 8h3, 8h20, data_bus[16]?8h18:8hf};
+        seven_seg_out = {8hff, 8h3, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       9:
-        seven_seg_out = {8hff, 8h4, 8h20, data_bus[16]?8h18:8hf};
+        seven_seg_out = {8hff, 8h4, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       10:
-        seven_seg_out = {8hff, 8h5, 8h20, data_bus[16]?8h18:8hf};
+        seven_seg_out = {8hff, 8h5, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       11:
-        seven_seg_out = {8hff, 8h6, 8h20, data_bus[16]?8h18:8hf};
+        seven_seg_out = {8hff, 8h6, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       12:
-        seven_seg_out = {8hff, 8h7, 8h20, data_bus[16]?8h18:8hf};
+        seven_seg_out = {8hff, 8h7, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       13:
-        seven_seg_out = {8hff, 8h8, 8h20, data_bus[16]?8h18:8hf};
+        seven_seg_out = {8hff, 8h8, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       14:
-        seven_seg_out = {8hff, 8h9, 8h20, data_bus[16]?8h18:8hf};
+        seven_seg_out = {8hff, 8h9, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       15:
-        seven_seg_out = {8h1, 8h0, 8h20, data_bus[16]?8h18:8hf};
+        seven_seg_out = {8h1, 8h0, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       16:
-        seven_seg_out = {8h1, 8h1, 8h20, data_bus[16]?8h18:8hf};
+        seven_seg_out = {8h1, 8h1, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       17:
-        seven_seg_out = {8h1, 8h2, 8h20, data_bus[16]?8h18:8hf};
+        seven_seg_out = {8h1, 8h2, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       18:
-        seven_seg_out = {8h1, 8h3, 8h20, data_bus[16]?8h18:8hf};
+        seven_seg_out = {8h1, 8h3, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       19:
-        seven_seg_out = {8h1, 8h4, 8h20, data_bus[16]?8h18:8hf};
+        seven_seg_out = {8h1, 8h4, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       20:
-        seven_seg_out = {8h1, 8h5, 8h20, data_bus[16]?8h18:8hf};
+        seven_seg_out = {8h1, 8h5, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       21:
-        seven_seg_out = {8h1, 8h6, 8h20, data_bus[16]?8h18:8hf};
+        seven_seg_out = {8h1, 8h6, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       22:
-        seven_seg_out = {8h1, 8h7, 8h20, data_bus[16]?8h18:8hf};
+        seven_seg_out = {8h1, 8h7, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       23:
         seven_seg_out = {8d18, 8d11, 8d19, 8d19};        //pass
@@ -177,6 +177,10 @@ module disp_ctrl (
       28:
         seven_seg_out = {c{4h0,data_bus[15:12]}, c{4h0,data_bus[11:8]}, c{4h0,data_bus[7:4]}, c{4h0,data_bus[3:0]}}; //alu out
         disc_led_out = {c{5h0,data_bus[18:16]},data_bus[15:8],data_bus[7:0]}; //z,v,n and alu out
+      default:
+        seven_seg_out = 4x{{8h0}};
+        disc_led_out = 3x{{8h0}};
       }
+    
   }
 }

@@ -24,7 +24,27 @@ module mojo_top (
     // The reset conditioner is used to synchronize the reset signal to the FPGA
     // clock. This ensures the entire FPGA comes out of reset at the same time.
     reset_conditioner reset_cond;
+    button_conditioner auto_button;
+    button_conditioner manual_button;
+    button_conditioner auto_fail_button;
+    
+    pipeline dip_cond[16] (#DEPTH(2));  //create a pipeline for the DIP input 
+    
+    edge_detector auto_edge(#RISE(1), #FALL(0));
+    edge_detector manual_edge(#RISE(1), #FALL(0));
+    edge_detector auto_fail_edge(#RISE(1), #FALL(0));
+    
+    .rst(rst){
+      hex_alutester hex_alutester;
+      disp_ctrl disp_ctrl;
+      multi_seven_seg multi_seven_seg;
+      }
   }
+  
+  
+ 
+  
+  
   
   always {
     reset_cond.in = ~rst_n; // input raw inverted reset signal
@@ -35,8 +55,32 @@ module mojo_top (
     spi_channel = bzzzz;    // not using flags
     avr_rx = bz;            // not using serial port
     
-    io_led = 3x{{8h00}};    // turn LEDs off
-    io_seg = 8hff;          // turn segments off
-    io_sel = 4hf;           // select no digits
+    io_seg = ~multi_seven_seg.seg; // connect segments to the driver       //segment of the 7-seg display
+    io_sel = ~multi_seven_seg.sel; // connect digit select to the driver   //digit of 7-seg display    
+       
+    dip_cond.in = c{io_dip[1][2:0],io_dip[0][2:0]};
+    
+    io_led = disp_ctrl.disc_led_out;
+    
+    manual_button.in = io_button[4];
+    auto_button.in = io_button[3];
+    auto_fail_button.in = io_button[2];
+    
+    manual_edge.in = manual_button.out;
+    auto_edge.in = auto_button.out;
+    auto_fail_edge.in = auto_button.out;
+    
+    hex_alutester.auto_fail = auto_fail_edge.out;
+    hex_alutester.auto = auto_edge.out;
+    hex_alutester.manual = manual_edge.out;
+    hex_alutester.rst2 = auto_fail_edge.out | auto_edge.out;
+    hex_alutester.dip_sw_in = dip_cond.out;
+    
+    disp_ctrl.data_bus = hex_alutester.data_bus_out;
+    disp_ctrl.state = hex_alutester.state_out;
+    
+    multi_seven_seg.values = disp_ctrl.seven_seg_out;
+    
+    
   }
 }

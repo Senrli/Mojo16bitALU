@@ -5,7 +5,9 @@ module hex_alutester (
     input auto,
     input auto_fail,
     input manual,
-    input dip_sw_in[3][8],        //dip switch input
+    input dip_sw_in[16],        //dip switch input
+    output state_out[5],
+    output data_bus_out[19]
   ) {
   
   .clk(clk) 
@@ -13,7 +15,7 @@ module hex_alutester (
     
     .rst(rst) 
     {
-      disp_ctrl disp_ctrl;
+
       fsm state_main = {IDLE, AUTO, AUTO_FAIL, MANUAL};        //reset the device into IDLE state when reset button is pressed
     }
     .rst(rst2)                                      //reset the fsm when entering the zero state
@@ -38,10 +40,11 @@ module hex_alutester (
   sig state[5];
   
   always {
+  
     case (state_main.q){
       state_main.IDLE:
         state = 0;
-        disp_ctrl.data_bus = 19x{0};
+        data_bus_out = 19x{0};
         alu_simple.alufn = 6h000;
         alu_simple.a = 16h0;
         alu_simple.b = 16h0;
@@ -53,40 +56,40 @@ module hex_alutester (
           state_main.d = state_main.MANUAL;
         }
       state_main.AUTO:
-        alu_simple.a = 16h0;
-        alu_simple.b = 16h0;
+        alu_simple.a = A;
+        alu_simple.b = B;
         
         if (delay_counter.q == 49999999) {
           delay_counter.d = 0;
           case(state_auto.q){
             state_auto.A_VAL:
               state = 1;
-              disp_ctrl.data_bus = A;
+              data_bus_out = A;
               state_auto.d = state_auto.A_VAL_DISP;
               alu_simple.alufn = 6h000;
              
             state_auto.A_VAL_DISP:
               state = 2;
-              disp_ctrl.data_bus = A;
+              data_bus_out = A;
               state_auto.d = state_auto.B_VAL;
               alu_simple.alufn = 6h000;
               
             state_auto.B_VAL:
               state = 3;
-              disp_ctrl.data_bus = B;
+              data_bus_out = B;
               state_auto.d = state_auto.B_VAL_DISP;
               alu_simple.alufn = 6h000;
               
             state_auto.B_VAL_DISP:
               state = 4;
-              disp_ctrl.data_bus = B;
+              data_bus_out = B;
               state_auto.d = state_auto.ADD_1;
               alu_simple.alufn = 6h000;
               
             state_auto.ADD_1:
               state = 5;
               alu_simple.alufn = 6h000;
-              disp_ctrl.data_bus[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
+              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
               pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               state_auto.d = state_auto.ADD_2;
@@ -94,7 +97,7 @@ module hex_alutester (
             state_auto.ADD_2:
               state = 6;
               alu_simple.alufn = 6h1;
-              disp_ctrl.data_bus[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
+              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
               pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               state_auto.d = state_auto.ADD_3;
@@ -102,7 +105,7 @@ module hex_alutester (
             state_auto.ADD_3:
               state = 7;
               alu_simple.alufn = 6h10;
-              disp_ctrl.data_bus[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
+              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
               pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               state_auto.d = state_auto.ADD_4;
@@ -110,7 +113,7 @@ module hex_alutester (
             state_auto.ADD_4:
               state = 8;
               alu_simple.alufn = 6h11;
-              disp_ctrl.data_bus[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
+              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
               pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               state_auto.d = state_auto.BOOLE_1;
@@ -118,7 +121,7 @@ module hex_alutester (
             state_auto.BOOLE_1:
               state = 9;
               alu_simple.alufn = 6h18;
-              disp_ctrl.data_bus[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
+              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
               pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               state_auto.d = state_auto.BOOLE_2;
@@ -126,7 +129,7 @@ module hex_alutester (
             state_auto.BOOLE_2:
               state = 10;
               alu_simple.alufn = 6h1E;
-              disp_ctrl.data_bus[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
+              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
               pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               state_auto.d = state_auto.BOOLE_3;
@@ -134,7 +137,7 @@ module hex_alutester (
             state_auto.BOOLE_3:
               state = 11;
               alu_simple.alufn = 6h16;
-              disp_ctrl.data_bus[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
+              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
               pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               state_auto.d = state_auto.BOOLE_4;
@@ -142,7 +145,7 @@ module hex_alutester (
             state_auto.BOOLE_4:
               state = 12;
               alu_simple.alufn = 6h1A;
-              disp_ctrl.data_bus[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
+              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
               pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               state_auto.d = state_auto.BOOLE_5;
@@ -150,7 +153,7 @@ module hex_alutester (
             state_auto.BOOLE_5:
               state = 13;
               alu_simple.alufn = 6h11;
-              disp_ctrl.data_bus[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
+              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
               pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               state_auto.d = state_auto.BOOLE_6;
@@ -158,7 +161,7 @@ module hex_alutester (
             state_auto.BOOLE_6:
               state = 14;
               alu_simple.alufn = 6h12;
-              disp_ctrl.data_bus[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
+              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
               pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               state_auto.d = state_auto.BOOLE_7;
@@ -166,7 +169,7 @@ module hex_alutester (
             state_auto.BOOLE_7:
               state = 15;
               alu_simple.alufn = 6h13;
-              disp_ctrl.data_bus[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
+              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
               pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               state_auto.d = state_auto.CMP_1;
@@ -174,7 +177,7 @@ module hex_alutester (
             state_auto.CMP_1:
               state = 16;
               alu_simple.alufn = 6h33;
-              disp_ctrl.data_bus[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
+              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
               pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               state_auto.d = state_auto.CMP_2;
@@ -182,7 +185,7 @@ module hex_alutester (
             state_auto.CMP_2:
               state = 17;
               alu_simple.alufn = 6h35;
-              disp_ctrl.data_bus[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
+              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
               pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               state_auto.d = state_auto.CMP_3;
@@ -190,7 +193,7 @@ module hex_alutester (
             state_auto.CMP_3:
               state = 18;
               alu_simple.alufn = 6h37;
-              disp_ctrl.data_bus[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
+              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
               pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               state_auto.d = state_auto.SHIFT_1;
@@ -198,7 +201,7 @@ module hex_alutester (
             state_auto.SHIFT_1:
               state = 19;
               alu_simple.alufn = 6h20;
-              disp_ctrl.data_bus[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
+              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
               pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               state_auto.d = state_auto.SHIFT_2;
@@ -206,7 +209,7 @@ module hex_alutester (
             state_auto.SHIFT_2:
               state = 20;
               alu_simple.alufn = 6h21;
-              disp_ctrl.data_bus[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
+              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
               pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               state_auto.d = state_auto.SHIFT_3;
@@ -214,7 +217,7 @@ module hex_alutester (
             state_auto.SHIFT_3:
               state = 21;
               alu_simple.alufn = 6h22;
-              disp_ctrl.data_bus[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
+              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
               pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               state_auto.d = state_auto.SHIFT_4;
@@ -222,7 +225,7 @@ module hex_alutester (
             state_auto.SHIFT_4:
               state = 22;
               alu_simple.alufn = 6h23;
-              disp_ctrl.data_bus[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
+              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
               pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
               state_auto.d = state_auto.PASS;
@@ -230,27 +233,32 @@ module hex_alutester (
             state_auto.PASS:
               state = 23;
               alu_simple.alufn = 6h0;
-              disp_ctrl.data_bus = 0;
+              data_bus_out = 0;
               state_auto.d = state_auto.PASS_NO;
               
             state_auto.PASS_NO:
               state = 24;
               alu_simple.alufn = 6h0;
-              disp_ctrl.data_bus = pass_counter.q;
+              data_bus_out = pass_counter.q;
               state_auto.d = state_auto.FAIL;
               
             state_auto.FAIL:
               state = 25;
               alu_simple.alufn = 6h0;
-              disp_ctrl.data_bus = 0;
+              data_bus_out = 0;
               state_auto.d = state_auto.FAIL_NO;
               
             state_auto.FAIL_NO:
               state = 26;
               alu_simple.alufn = 6h0;
-              disp_ctrl.data_bus = fail_counter.q;
+              data_bus_out = fail_counter.q;
               state_auto.d = state_auto.A_VAL;
               state_main.d = state_main.IDLE;
+              
+            default:
+              state = 0;
+              alu_simple.alufn = 6h0;
+              data_bus_out = 0;
             }
         }else{
         delay_counter.d = delay_counter.q+1;
@@ -259,13 +267,13 @@ module hex_alutester (
         
       state_main.AUTO_FAIL:
         state = 0;
-        disp_ctrl.data_bus = 19x{0};
+        data_bus_out = 19x{0};
         alu_simple.alufn = 6h000;
         alu_simple.a = 16h0;
         alu_simple.b = 16h0;
       state_main.MANUAL:
         state = 0;
-        disp_ctrl.data_bus = 19x{0};
+        data_bus_out = 19x{0};
         alu_simple.alufn = 6h000;
         alu_simple.a = 16h0;
         alu_simple.b = 16h0;
@@ -277,9 +285,7 @@ module hex_alutester (
         state = 5h0;
         
       }
-    
-    disp_ctrl.state = state;
     true_lut.state = state;
-
+    state_out = state;
   }
 }

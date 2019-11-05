@@ -18,6 +18,7 @@
     <src>disp_ctrl.luc</src>
     <src>hex_alutester.luc</src>
     <component>reset_conditioner.luc</component>
+    <component>edge_detector.luc</component>
     <component>button_conditioner.luc</component>
     <constraint lib="true">io_shield.ucf</constraint>
     <constraint lib="true">mojo.ucf</constraint>
