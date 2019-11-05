@@ -26,62 +26,62 @@ module disp_ctrl (
           case(scroll_counter.q)
           {
             scroll_counter.ZERO:
-              seven_seg_out = {8d21, 8hff, 8hff, 8hff};
+              seven_seg_out = {8h21, 8hff, 8hff, 8hff};
               scroll_counter.d = scroll_counter.ONE;
               disc_led_out = {8h00, 8h00, 8hc0};
               
             scroll_counter.ONE:
-              seven_seg_out = {8hff, 8d21, 8hff, 8hff};
+              seven_seg_out = {8hff, 8h21, 8hff, 8hff};
               scroll_counter.d = scroll_counter.TWO;
               disc_led_out = {8h00, 8h00, 8h30};
               
             scroll_counter.TWO:
-              seven_seg_out = {8hff, 8hff, 8d21, 8hff};
+              seven_seg_out = {8hff, 8hff, 8h21, 8hff};
               scroll_counter.d = scroll_counter.THREE;
               disc_led_out = {8h00, 8h00, 8h0c};
           
             scroll_counter.THREE:
-              seven_seg_out = {8hff, 8hff, 8hff, 8d21};
+              seven_seg_out = {8hff, 8hff, 8hff, 8h21};
               scroll_counter.d = scroll_counter.FOUR;
               disc_led_out = {8h00, 8h00, 8h03};
               
             scroll_counter.FOUR:
-              seven_seg_out = {8hff, 8hff, 8hff, 8d22};
+              seven_seg_out = {8hff, 8hff, 8hff, 8h22};
               scroll_counter.d = scroll_counter.FIVE;
               disc_led_out = {8hc0, 8h00, 8h00};
               
             scroll_counter.FIVE:
-              seven_seg_out = {8hff, 8hff, 8hff, 8d23};
+              seven_seg_out = {8hff, 8hff, 8hff, 8h23};
               scroll_counter.d = scroll_counter.SIX;
               disc_led_out = {8h30, 8h00, 8h00};
               
             scroll_counter.SIX:
-              seven_seg_out = {8hff, 8hff, 8hff, 8d24};
+              seven_seg_out = {8hff, 8hff, 8hff, 8h24};
               scroll_counter.d = scroll_counter.SEVEN;
               disc_led_out = {8h0c, 8h00, 8h00};
               
             scroll_counter.SEVEN:
-              seven_seg_out = {8hff, 8hff, 8d24, 8hff};
+              seven_seg_out = {8hff, 8hff, 8h24, 8hff};
               scroll_counter.d = scroll_counter.EIGHT;
               disc_led_out = {8h03, 8h00, 8h00};
               
             scroll_counter.EIGHT:
-              seven_seg_out = {8hff, 8d24, 8hff, 8hff};
+              seven_seg_out = {8hff, 8h24, 8hff, 8hff};
               scroll_counter.d = scroll_counter.NINE;
               disc_led_out = {8h00, 8hc0, 8h00};
               
             scroll_counter.NINE:
-              seven_seg_out = {8d24, 8hff, 8hff, 8hff};
+              seven_seg_out = {8h24, 8hff, 8hff, 8hff};
               scroll_counter.d = scroll_counter.TEN;
               disc_led_out = {8h00, 8h30, 8h00};
               
             scroll_counter.TEN:
-              seven_seg_out = {8d25, 8hff, 8hff, 8hff};
+              seven_seg_out = {8h25, 8hff, 8hff, 8hff};
               scroll_counter.d = scroll_counter.ELEVEN;
               disc_led_out = {8h00, 8h0c, 8h00};
               
             scroll_counter.ELEVEN:
-              seven_seg_out = {8d26, 8hff, 8hff, 8hff};
+              seven_seg_out = {8h26, 8hff, 8hff, 8hff};
               scroll_counter.d = scroll_counter.ZERO;
               disc_led_out = {8h00, 8h03, 8h00};
             
@@ -106,7 +106,7 @@ module disp_ctrl (
         seven_seg_out = {c{4h0,data_bus[15:12]}, c{4h0,data_bus[11:8]}, c{4h0,data_bus[7:4]}, c{4h0,data_bus[3:0]}};
         disc_led_out = {8h00, data_bus[15:8], data_bus[7:0]};
       5:
-        seven_seg_out = {8hff, 8h0, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
+        seven_seg_out = {8hff, 8h0, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8hf:8h18};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       6:
         seven_seg_out = {8hff, 8h1, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
@@ -160,13 +160,13 @@ module disp_ctrl (
         seven_seg_out = {8h1, 8h7, 8h20, (!(!data_bus[18])|!(!data_bus[17])|!(!data_bus[16])|!(!data_bus[15:0]))?8h18:8hf};
         disc_led_out = {c{5h0,data_bus[18:16]}, data_bus[15:8], data_bus[7:0]};
       23:
-        seven_seg_out = {8d18, 8d11, 8d19, 8d19};        //pass
+        seven_seg_out = {8h18, 8ha, 8h19, 8h19};        //pass
         disc_led_out = 3x{{8h00}};
       24:
         seven_seg_out = {seven_seg_dec.out[1], seven_seg_dec.out[0], 8hff,8hff}; //show no of passes
         disc_led_out = 3x{{8h00}};
       25:
-        seven_seg_out = {8d14, 8d11, 8d16, 8d17};        //fail
+        seven_seg_out = {8hf, 8ha, 8h16, 8h17};        //fail
         disc_led_out = 3x{{8h00}};
       26:
         seven_seg_out = {seven_seg_dec.out[1], seven_seg_dec.out[0], 8hff,8hff}; //show no of failures
@@ -177,6 +177,11 @@ module disp_ctrl (
       28:
         seven_seg_out = {c{4h0,data_bus[15:12]}, c{4h0,data_bus[11:8]}, c{4h0,data_bus[7:4]}, c{4h0,data_bus[3:0]}}; //alu out
         disc_led_out = {c{5h0,data_bus[18:16]},data_bus[15:8],data_bus[7:0]}; //z,v,n and alu out
+        
+      29:
+        seven_seg_out = {8ha, 8h29, 8h19, 8h20};          //ans-
+        disc_led_out = 3x{{8h00}};
+        
       default:
         seven_seg_out = 4x{{8h0}};
         disc_led_out = 3x{{8h0}};

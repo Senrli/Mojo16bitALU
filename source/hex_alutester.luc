@@ -17,9 +17,11 @@ module hex_alutester (
     {
 
       fsm state_main = {IDLE, AUTO, AUTO_FAIL, MANUAL};        //reset the device into IDLE state when reset button is pressed
-    }
-    .rst(rst2)                                      //reset the fsm when entering the zero state
-    {
+      .rst(rst2)                                      //reset the fsm when entering the zero state
+      {
+      dff a[16];
+      dff b[16];
+      dff alufn[6];
       dff delay_counter[26];         //2^26 = 67,108,864, need to be capped at 50,000,000 for one second
       dff pass_counter[5];           //counter to record down no of passed cases 
       dff fail_counter[5];           //counter to record down no of failed cases
@@ -29,7 +31,10 @@ module hex_alutester (
                         CMP_1, CMP_2, CMP_3, 
                         SHIFT_1, SHIFT_2, SHIFT_3, SHIFT_4, 
                         PASS, PASS_NO, FAIL, FAIL_NO};  
+      fsm state_manual = {A, A_DISP, B, B_DISP, ALU, ALU_DISP,  RESULT, RESULT_DISP};
+      }
     }
+    
   }
   
   alu_simple alu_simple;
@@ -39,6 +44,7 @@ module hex_alutester (
   const B = 16hbeef;
   sig state[5];
   
+
   always {
   
     case (state_main.q){
@@ -49,7 +55,7 @@ module hex_alutester (
         alu_simple.a = 16h0;
         alu_simple.b = 16h0;
         if (auto){
-          state_main.d = state_main.AUTO;
+          state_main.d = state_main.AUTO;          
         } else if (auto_fail){
           state_main.d = state_main.AUTO_FAIL;
         } else if (manual){
@@ -89,145 +95,145 @@ module hex_alutester (
             state_auto.ADD_1:
               state = 5;
               alu_simple.alufn = 6h000;
-              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
-              pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
-              fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
+              data_bus_out[18:0] =c{~(true_lut.z ^ alu_simple.z), ~(true_lut.v ^ alu_simple.v), ~(true_lut.n ^ alu_simple.n), ~(alu_simple.alu ^ true_lut.alu_lut)};
+              pass_counter.d = pass_counter.q + !((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
+              fail_counter.d = fail_counter.q + ((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
               state_auto.d = state_auto.ADD_2;
               
             state_auto.ADD_2:
               state = 6;
               alu_simple.alufn = 6h1;
-              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
-              pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
-              fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
+              data_bus_out[18:0] =c{~(true_lut.z ^ alu_simple.z), ~(true_lut.v ^ alu_simple.v), ~(true_lut.n ^ alu_simple.n), ~(alu_simple.alu ^ true_lut.alu_lut)};
+              pass_counter.d = pass_counter.q + !((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
+              fail_counter.d = fail_counter.q + ((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
               state_auto.d = state_auto.ADD_3;
               
             state_auto.ADD_3:
               state = 7;
               alu_simple.alufn = 6h10;
-              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
-              pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
-              fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
+              data_bus_out[18:0] =c{~(true_lut.z ^ alu_simple.z), ~(true_lut.v ^ alu_simple.v), ~(true_lut.n ^ alu_simple.n), ~(alu_simple.alu ^ true_lut.alu_lut)};
+              pass_counter.d = pass_counter.q + !((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
+              fail_counter.d = fail_counter.q + ((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
               state_auto.d = state_auto.ADD_4;
             
             state_auto.ADD_4:
               state = 8;
               alu_simple.alufn = 6h11;
-              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
-              pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
-              fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
+              data_bus_out[18:0] =c{~(true_lut.z ^ alu_simple.z), ~(true_lut.v ^ alu_simple.v), ~(true_lut.n ^ alu_simple.n), ~(alu_simple.alu ^ true_lut.alu_lut)};
+              pass_counter.d = pass_counter.q + !((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
+              fail_counter.d = fail_counter.q + ((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
               state_auto.d = state_auto.BOOLE_1;
               
             state_auto.BOOLE_1:
               state = 9;
               alu_simple.alufn = 6h18;
-              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
-              pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
-              fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
+              data_bus_out[18:0] =c{~(true_lut.z ^ alu_simple.z), ~(true_lut.v ^ alu_simple.v), ~(true_lut.n ^ alu_simple.n), ~(alu_simple.alu ^ true_lut.alu_lut)};
+              pass_counter.d = pass_counter.q + !((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
+              fail_counter.d = fail_counter.q + ((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
               state_auto.d = state_auto.BOOLE_2;
             
             state_auto.BOOLE_2:
               state = 10;
               alu_simple.alufn = 6h1E;
-              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
-              pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
-              fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
+              data_bus_out[18:0] =c{~(true_lut.z ^ alu_simple.z), ~(true_lut.v ^ alu_simple.v), ~(true_lut.n ^ alu_simple.n), ~(alu_simple.alu ^ true_lut.alu_lut)};
+              pass_counter.d = pass_counter.q + !((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
+              fail_counter.d = fail_counter.q + ((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
               state_auto.d = state_auto.BOOLE_3;
               
             state_auto.BOOLE_3:
               state = 11;
               alu_simple.alufn = 6h16;
-              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
-              pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
-              fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
+              data_bus_out[18:0] =c{~(true_lut.z ^ alu_simple.z), ~(true_lut.v ^ alu_simple.v), ~(true_lut.n ^ alu_simple.n), ~(alu_simple.alu ^ true_lut.alu_lut)};
+              pass_counter.d = pass_counter.q + !((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
+              fail_counter.d = fail_counter.q + ((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
               state_auto.d = state_auto.BOOLE_4;
               
             state_auto.BOOLE_4:
               state = 12;
               alu_simple.alufn = 6h1A;
-              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
-              pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
-              fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
+              data_bus_out[18:0] =c{~(true_lut.z ^ alu_simple.z), ~(true_lut.v ^ alu_simple.v), ~(true_lut.n ^ alu_simple.n), ~(alu_simple.alu ^ true_lut.alu_lut)};
+              pass_counter.d = pass_counter.q + !((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
+              fail_counter.d = fail_counter.q + ((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
               state_auto.d = state_auto.BOOLE_5;
             
             state_auto.BOOLE_5:
               state = 13;
               alu_simple.alufn = 6h11;
-              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
-              pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
-              fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
+              data_bus_out[18:0] =c{~(true_lut.z ^ alu_simple.z), ~(true_lut.v ^ alu_simple.v), ~(true_lut.n ^ alu_simple.n), ~(alu_simple.alu ^ true_lut.alu_lut)};
+              pass_counter.d = pass_counter.q + !((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
+              fail_counter.d = fail_counter.q + ((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
               state_auto.d = state_auto.BOOLE_6;
               
             state_auto.BOOLE_6:
               state = 14;
               alu_simple.alufn = 6h12;
-              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
-              pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
-              fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
+              data_bus_out[18:0] =c{~(true_lut.z ^ alu_simple.z), ~(true_lut.v ^ alu_simple.v), ~(true_lut.n ^ alu_simple.n), ~(alu_simple.alu ^ true_lut.alu_lut)};
+              pass_counter.d = pass_counter.q + !((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
+              fail_counter.d = fail_counter.q + ((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
               state_auto.d = state_auto.BOOLE_7;
             
             state_auto.BOOLE_7:
               state = 15;
               alu_simple.alufn = 6h13;
-              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
-              pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
-              fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
+              data_bus_out[18:0] =c{~(true_lut.z ^ alu_simple.z), ~(true_lut.v ^ alu_simple.v), ~(true_lut.n ^ alu_simple.n), ~(alu_simple.alu ^ true_lut.alu_lut)};
+              pass_counter.d = pass_counter.q + !((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
+              fail_counter.d = fail_counter.q + ((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
               state_auto.d = state_auto.CMP_1;
               
             state_auto.CMP_1:
               state = 16;
               alu_simple.alufn = 6h33;
-              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
-              pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
-              fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
+              data_bus_out[18:0] =c{~(true_lut.z ^ alu_simple.z), ~(true_lut.v ^ alu_simple.v), ~(true_lut.n ^ alu_simple.n), ~(alu_simple.alu ^ true_lut.alu_lut)};
+              pass_counter.d = pass_counter.q + !((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
+              fail_counter.d = fail_counter.q + ((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
               state_auto.d = state_auto.CMP_2;
               
             state_auto.CMP_2:
               state = 17;
               alu_simple.alufn = 6h35;
-              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
-              pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
-              fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
+              data_bus_out[18:0] =c{~(true_lut.z ^ alu_simple.z), ~(true_lut.v ^ alu_simple.v), ~(true_lut.n ^ alu_simple.n), ~(alu_simple.alu ^ true_lut.alu_lut)};
+              pass_counter.d = pass_counter.q + !((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
+              fail_counter.d = fail_counter.q + ((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
               state_auto.d = state_auto.CMP_3;
             
             state_auto.CMP_3:
               state = 18;
               alu_simple.alufn = 6h37;
-              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
-              pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
-              fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
+              data_bus_out[18:0] =c{~(true_lut.z ^ alu_simple.z), ~(true_lut.v ^ alu_simple.v), ~(true_lut.n ^ alu_simple.n), ~(alu_simple.alu ^ true_lut.alu_lut)};
+              pass_counter.d = pass_counter.q + !((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
+              fail_counter.d = fail_counter.q + ((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
               state_auto.d = state_auto.SHIFT_1;
               
             state_auto.SHIFT_1:
               state = 19;
               alu_simple.alufn = 6h20;
-              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
-              pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
-              fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
+              data_bus_out[18:0] =c{~(true_lut.z ^ alu_simple.z), ~(true_lut.v ^ alu_simple.v), ~(true_lut.n ^ alu_simple.n), ~(alu_simple.alu ^ true_lut.alu_lut)};
+              pass_counter.d = pass_counter.q + !((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
+              fail_counter.d = fail_counter.q + ((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
               state_auto.d = state_auto.SHIFT_2;
               
             state_auto.SHIFT_2:
               state = 20;
               alu_simple.alufn = 6h21;
-              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
-              pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
-              fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
+              data_bus_out[18:0] =c{~(true_lut.z ^ alu_simple.z), ~(true_lut.v ^ alu_simple.v), ~(true_lut.n ^ alu_simple.n), ~(alu_simple.alu ^ true_lut.alu_lut)};
+              pass_counter.d = pass_counter.q + !((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
+              fail_counter.d = fail_counter.q + ((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
               state_auto.d = state_auto.SHIFT_3;
               
             state_auto.SHIFT_3:
               state = 21;
               alu_simple.alufn = 6h22;
-              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
-              pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
-              fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
+              data_bus_out[18:0] =c{~(true_lut.z ^ alu_simple.z), ~(true_lut.v ^ alu_simple.v), ~(true_lut.n ^ alu_simple.n), ~(alu_simple.alu ^ true_lut.alu_lut)};
+              pass_counter.d = pass_counter.q + !((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
+              fail_counter.d = fail_counter.q + ((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
               state_auto.d = state_auto.SHIFT_4;
               
             state_auto.SHIFT_4:
               state = 22;
               alu_simple.alufn = 6h23;
-              data_bus_out[18:0] =c{true_lut.z & alu_simple.z, true_lut.v & alu_simple.v, true_lut.n & alu_simple.n, alu_simple.alu & true_lut.alu_lut};
-              pass_counter.d = pass_counter.q + (true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
-              fail_counter.d = fail_counter.q + !(true_lut.z && alu_simple.z) && (true_lut.v && alu_simple.v) && (true_lut.n && alu_simple.n) && (alu_simple.alu && true_lut.alu_lut);
+              data_bus_out[18:0] =c{~(true_lut.z ^ alu_simple.z), ~(true_lut.v ^ alu_simple.v), ~(true_lut.n ^ alu_simple.n), ~(alu_simple.alu ^ true_lut.alu_lut)};
+              pass_counter.d = pass_counter.q + !((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
+              fail_counter.d = fail_counter.q + ((true_lut.z ^ alu_simple.z) | (true_lut.v ^ alu_simple.v) | (true_lut.n ^ alu_simple.n) | (alu_simple.alu ^ true_lut.alu_lut));
               state_auto.d = state_auto.PASS;
               
             state_auto.PASS:
@@ -271,18 +277,99 @@ module hex_alutester (
         alu_simple.alufn = 6h000;
         alu_simple.a = 16h0;
         alu_simple.b = 16h0;
-      state_main.MANUAL:
-        state = 0;
-        data_bus_out = 19x{0};
-        alu_simple.alufn = 6h000;
-        alu_simple.a = 16h0;
-        alu_simple.b = 16h0;
         
+      state_main.MANUAL:
+        alu_simple.alufn = alufn.q;
+        alu_simple.a = a.q;
+        alu_simple.b = b.q;
+        case(state_manual.q){
+          state_manual.A:
+            state = 1;
+            data_bus_out = 0;
+            if (delay_counter.q == 49999999){
+              state_manual.d = state_manual.A_DISP;
+              }else{
+              delay_counter.d = delay_counter.q + 1;
+              }
+            
+          state_manual.A_DISP:
+            state = 2;
+            a.d = dip_sw_in;
+            
+            data_bus_out = a.q;
+            if (manual){
+              state_manual.d = state_manual.B;
+              delay_counter.d = 0;
+              }
+            
+          state_manual.B:
+            state = 3;
+            data_bus_out = 0;
+            if (delay_counter.q == 49999999){
+              state_manual.d = state_manual.B_DISP;
+              }else{
+              delay_counter.d = delay_counter.q + 1;
+              }
+            
+          state_manual.B_DISP:
+          state = 2;
+            b.d = dip_sw_in;
+            data_bus_out = b.q;
+            if (manual){
+              state_manual.d = state_manual.ALU;
+              delay_counter.d = 0;
+              }
+            
+          state_manual.ALU:
+            state = 27;
+            data_bus_out = 0;
+            if (delay_counter.q == 49999999){
+              state_manual.d = state_manual.ALU_DISP;
+              }else{
+              delay_counter.d = delay_counter.q + 1;
+              }
+            
+            
+          state_manual.ALU_DISP:
+          state = 2;
+            alufn.d = dip_sw_in;
+            data_bus_out = alufn.q;
+            if (manual){
+              state_manual.d = state_manual.RESULT;
+              delay_counter.d = 0;
+              }
+          
+          state_manual.RESULT:
+            state = 29;
+            data_bus_out = 0;
+            if (delay_counter.q == 49999999){
+              state_manual.d = state_manual.RESULT_DISP;
+              }else{
+              delay_counter.d = delay_counter.q + 1;
+              }
+            
+          
+          state_manual.RESULT_DISP:
+            state = 28;
+            data_bus_out = c{alu_simple.z, alu_simple.v, alu_simple.n, alu_simple.alu};
+            if (manual){
+              state_manual.d = state_manual.A;
+              state_main.d = state_main.IDLE;
+              }
+            
+          default:
+            state = 0;
+            data_bus_out = 19x{0};
+            alu_simple.alufn = 6h000;
+            alu_simple.a = 16h0;
+            alu_simple.b = 16h0;
+        }
       default:
         alu_simple.alufn = 6h000;
         alu_simple.a = 16h0;
         alu_simple.b = 16h0;
         state = 5h0;
+
         
       }
     true_lut.state = state;

@@ -14,6 +14,7 @@
     <src>fa.luc</src>
     <src>hex_boole.luc</src>
     <src>hex_cmp.luc</src>
+    <component>bin_to_dec.luc</component>
     <src top="true">mojo_top.luc</src>
     <src>disp_ctrl.luc</src>
     <src>hex_alutester.luc</src>

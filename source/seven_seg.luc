@@ -25,6 +25,7 @@ module seven_seg (
       h10: segs = 7b0111101;       //letter g
       h16: segs = 7b0110000;       //letter i
       h17: segs = 7b0111000;       //letter l
+      h29: segs = 7b0110111;       //letter n
       h18: segs = 7b1110011;       //letter p
       h27: segs = 7b0110011;        //letter r
       h19: segs = 7b1101101;       //letter s

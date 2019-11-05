@@ -58,7 +58,7 @@ module mojo_top (
     io_seg = ~multi_seven_seg.seg; // connect segments to the driver       //segment of the 7-seg display
     io_sel = ~multi_seven_seg.sel; // connect digit select to the driver   //digit of 7-seg display    
        
-    dip_cond.in = c{io_dip[1][2:0],io_dip[0][2:0]};
+    dip_cond.in = c{io_dip[1][7:0],io_dip[0][7:0]};
     
     io_led = disp_ctrl.disc_led_out;
     
@@ -73,7 +73,7 @@ module mojo_top (
     hex_alutester.auto_fail = auto_fail_edge.out;
     hex_alutester.auto = auto_edge.out;
     hex_alutester.manual = manual_edge.out;
-    hex_alutester.rst2 = auto_fail_edge.out | auto_edge.out;
+    hex_alutester.rst2 = auto_fail_edge.out | auto_edge.out | manual_edge.out;
     hex_alutester.dip_sw_in = dip_cond.out;
     
     disp_ctrl.data_bus = hex_alutester.data_bus_out;
