@@ -1,110 +1,156 @@
 module true_lut (
     input state[5],
     output alu_lut[16],
+    output a[16],
+    output b[16],
     output z,
     output v,
     output n
   ) {
+  
+  sig a_reg[16];
+  sig b_reg[16];
 
   always {
+
     case(state){
-      5: 
-        alu_lut = 16hdead + 16hbeef;
+      5: // ADD
+        a_reg = 16hc8fc;
+        b_reg = 16h3704;
+        alu_lut = a_reg + b_reg;
+        z = 1;//z =1;
+        v = 0;
+        n = 0;
+      6: // SUB
+        a_reg = 16h0f0e;
+        b_reg = 16h22f2;
+        alu_lut = a_reg - b_reg;
+        z = 0;
+        v = 0;
+        n = 1;
+      7: // MUL
+        a_reg = 16h007f;
+        b_reg = 16h003f;
+        alu_lut = a_reg * b_reg;
+        z = 0;
+        v = 0;
+        n = 0;
+      8: // MOD
+        a_reg = 16h2640;
+        b_reg = 16ha13f;
+        alu_lut = a_reg - ( a_reg/b_reg * b_reg);
+        z = 0;
+        v = 0;
+        n = 0;
+      9: // AND
+        a_reg = 16h310c;
+        b_reg = 16h26a0;
+        alu_lut = a_reg & b_reg;
+        z = 0;
+        v = 0;
+        n = 0;
+      10: // OR
+        a_reg = 16hf8f5;
+        b_reg = 16h31ca;
+        alu_lut = a_reg | b_reg;
+        z = 0;
+        v = 0;
+        n = 0;
+      11: // XOR
+        a_reg = 16h7281;
+        b_reg = 16h1f0d;
+        alu_lut = a_reg ^ b_reg;
+        z = 0;
+        v = 0;
+        n = 0;
+      12: // "A"
+        a_reg = 16hd12f;
+        b_reg = 16hea46;
+        alu_lut = a_reg;
+        z = 0;
+        v = 0;
+        n = 1;
+      13: // NOR
+        a_reg = 16h5961;
+        b_reg = 16h1891;
+        alu_lut = ~(a_reg | b_reg);
+        z = 0;
+        v = 0;
+        n = 0;
+      14: // NAND
+        a_reg = 16hbe92;
+        b_reg = 16hd7ac;
+        alu_lut = ~(a_reg & b_reg);
+        z = 0;
+        v = 0;
+        n = 1;
+      15: // XNOR
+        a_reg = 16h5af0;
+        b_reg = 16h70d6;
+        alu_lut = ~(a_reg ^ b_reg);
+        z = 0;
+        v = 0;
+        n = 1;
+      16: // SHL
+        a_reg = 16h6279;
+        b_reg = 16h0004;
+        alu_lut = 16h2790;
+        z = 0;
+        v = 0;
+        n = 0;
+      17: // SHR
+        a_reg = 16h8700;
+        b_reg = 16h0009;
+        alu_lut = 16h0043;
+        z = 0;
+        v = 0;
+        n = 1;
+      18: // SHLA
+        a_reg = 16haf82;
+        b_reg = 16h000a;
+        alu_lut = 16h0BFF;
+        z = 0;
+        v = 0;
+        n = 1;
+      19: // SHRA
+        a_reg = 16h3b4f;
+        b_reg = 16h0009;
+        alu_lut = 16h001d;
+        z = 0;
+        v = 0;
+        n = 0;
+      20: // CMPEQ
+        a_reg = 16h56c6;
+        b_reg = 16h56c6;
+        alu_lut = 16h0001;
+        z = 0;
+        v = 0;
+        n = 0;
+      21: // CMPLT
+        a_reg = 16hc089;
+        b_reg = 16h0aeb;
+        alu_lut = 16h0001;
+        z = 0;
+        v = 0;
+        n = 1;
+      22: // CMPLE
+        a_reg = 16hca66;
+        b_reg = 16h94cb;
+        alu_lut = 16h0000;
         z = 0;
         v = 1;
         n = 0;
-      6: 
-        alu_lut = 16hdead - 16hbeef;
-        z = 0;
-        v = 0;
-        n = 0;
-      7: 
-        alu_lut = 16hdead * 16hbeef;
-        z = 0;
-        v = 0;
-        n = 0;
-      8: 
-        alu_lut = 16hdead - ( 16hdead/16hbeef * 16hbeef);
-        z = 0;
-        v = 0;
-        n = 0;
-      9: 
-        alu_lut = 16hdead & 16hbeef;
-        z = 0;
-        v = 0;
-        n = 0;
-      10: 
-        alu_lut = 16hdead | 16hbeef;
-        z = 0;
-        v = 0;
-        n = 0;
-      11: 
-        alu_lut = 16hdead ^ 16hbeef;
-        z = 0;
-        v = 0;
-        n = 0;
-      12: 
-        alu_lut = 16hdead;
-        z = 0;
-        v = 0;
-        n = 0;
-      13: 
-        alu_lut = ~(16hdead | 16hbeef);
-        z = 0;
-        v = 0;
-        n = 0;
-      14:
-        alu_lut = ~(16hdead & 16hbeef);
-        z = 0;
-        v = 0;
-        n = 0;
-      15: 
-        alu_lut = ~(16hdead ^ 16hbeef);
-        z = 0;
-        v = 0;
-        n = 0;
-      16:
-        alu_lut = 16hdead - 16hbeef;
-        z = 0;
-        v = 0;
-        n = 0;
-      17:
-        alu_lut = 16hdead - 16hbeef;
-        z = 0;
-        v = 0;
-        n = 0;
-      18:
-        alu_lut = 16hdead - 16hbeef;
-        z = 0;
-        v = 0;
-        n = 0;
-      19:
-        alu_lut = 160000;
-        z = 0;
-        v = 0;
-        n = 0;
-      20:
-        alu_lut = 160000;
-        z = 0;
-        v = 0;
-        n = 0;
-      21:
-        alu_lut = 161111;
-        z = 0;
-        v = 0;
-        n = 0;
-      22:
-        alu_lut = 161111;
-        z = 0;
-        v = 0;
-        n = 0;
+        
       default:
-        alu_lut = 160000;
+        alu_lut = 16h0000;
+        a_reg = 0;
+        b_reg = 0;
         z = 0;
         v = 0;
         n = 0;
         
     }
-    
+    a = a_reg;
+    b = b_reg;
   }
 }

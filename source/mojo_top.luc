@@ -63,12 +63,12 @@ module mojo_top (
     io_led = disp_ctrl.disc_led_out;
     
     manual_button.in = io_button[4];
-    auto_button.in = io_button[3];
+    auto_button.in = io_button[0];
     auto_fail_button.in = io_button[2];
     
     manual_edge.in = manual_button.out;
     auto_edge.in = auto_button.out;
-    auto_fail_edge.in = auto_button.out;
+    auto_fail_edge.in = auto_fail_button.out;
     
     hex_alutester.auto_fail = auto_fail_edge.out;
     hex_alutester.auto = auto_edge.out;

@@ -3,7 +3,7 @@ module hex_cmp (
     input z, 
     input v, 
     input n, 
-    output out  // output binary value comp
+    output out[16]  // output binary value comp
     
   ) {
 
@@ -11,13 +11,13 @@ module hex_cmp (
     case(alufn[2:1])
     {
       b01:
-        out = z;            //comeq
+        out[0] = z;            //comeq
       b10:
-        out = n ^ v;        //complt
+        out[0] = n ^ v;        //complt
       b11:
-        out = z | (n ^ v);  //comle
+        out[0] = z | (n ^ v);  //comle
       default:
-        out = 0;
+        out[0] = 0;
     }    
   }
 }

@@ -34,7 +34,7 @@ module alu_simple (
         alu = boole.out;
       b10:
         alu = shift.out;
-      b10:
+      b11:
         alu = cmp.out;
       default:
         alu = 16h0000;
