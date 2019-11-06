@@ -20,7 +20,8 @@ module mojo_top (
   
   sig rst;                  // reset signal
   
-  .clk(clk) {
+  .clk(clk){
+    dff clk2;
     // The reset conditioner is used to synchronize the reset signal to the FPGA
     // clock. This ensures the entire FPGA comes out of reset at the same time.
     reset_conditioner reset_cond;
@@ -33,6 +34,15 @@ module mojo_top (
     edge_detector auto_edge(#RISE(1), #FALL(0));
     edge_detector manual_edge(#RISE(1), #FALL(0));
     edge_detector auto_fail_edge(#RISE(1), #FALL(0));
+    }
+  
+  .clk(clk2.q){
+    dff clk4;
+    }
+  
+  
+  .clk(clk4.q) {
+    
     
     .rst(rst){
       hex_alutester hex_alutester;
@@ -47,6 +57,8 @@ module mojo_top (
   
   
   always {
+    clk2.d = clk2.q +1;
+    clk4.d = clk4.q +1;
     reset_cond.in = ~rst_n; // input raw inverted reset signal
     rst = reset_cond.out;   // conditioned reset
     

@@ -8,7 +8,6 @@ module hex_add (
     output n
   ) {
 
-  sig minus[16];
   sig sum[16];
   
   always {

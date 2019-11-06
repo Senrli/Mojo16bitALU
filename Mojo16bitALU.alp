@@ -2,6 +2,8 @@
 <project name="Mojo16bitALU" board="Mojo" language="Lucid" version="2">
   <files>
     <src>true_lut.luc</src>
+    <component>simple_dual_ram.v</component>
+    <component>reg_interface.luc</component>
     <src>alu_simple.luc</src>
     <src>hex_shift.luc</src>
     <src>hex_add.luc</src>
@@ -16,8 +18,10 @@
     <src>hex_cmp.luc</src>
     <component>bin_to_dec.luc</component>
     <src top="true">mojo_top.luc</src>
+    <component>reg_interface_debug.luc</component>
     <src>disp_ctrl.luc</src>
     <src>hex_alutester.luc</src>
+    <component>wave_capture.luc</component>
     <component>reset_conditioner.luc</component>
     <component>edge_detector.luc</component>
     <component>button_conditioner.luc</component>
