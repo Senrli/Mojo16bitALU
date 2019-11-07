@@ -14,6 +14,41 @@ module true_lut (
   always {
 
     case(state){
+      0:
+        a_reg = 16hc8fc;
+        b_reg = 16h3704;
+        alu_lut = 16hdead;
+        z = 1;//z =1;
+        v = 0;
+        n = 0;
+      1:
+        a_reg = 16hc8fc;
+        b_reg = 16hbeef;
+        alu_lut = 16hbeef;
+        z = 1;//z =1;
+        v = 0;
+        n = 0;
+      2:
+        a_reg = 16hc8fc;
+        b_reg = 16hceef;
+        alu_lut = 16hceef;
+        z = 1;//z =1;
+        v = 0;
+        n = 0;
+      3:
+        a_reg = 16hc8fc;
+        b_reg = 16hdee;
+        alu_lut = 16hdeef;
+        z = 1;//z =1;
+        v = 0;
+        n = 0;
+      4:
+        a_reg = 16hc8fc;
+        b_reg = 16h3704;
+        alu_lut = 16heeef;
+        z = 1;//z =1;
+        v = 0;
+        n = 0;
       5: // ADD
         a_reg = 16hc8fc;
         b_reg = 16h3704;
