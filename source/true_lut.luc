@@ -1,54 +1,19 @@
 module true_lut (
     input state[5],
-    output alu_lut[16],
-    output a[16],
-    output b[16],
-    output z,
-    output v,
-    output n
+    output alu_lut[16],  //lut value of the ALU output for each test
+    output a[16],        //a value of each test
+    output b[16],        //b value of each test
+    output z,            //z value of each test
+    output v,            //v value of each test
+    output n             //n value of each test
   ) {
   
-  sig a_reg[16];
-  sig b_reg[16];
+  sig a_reg[16];      //keeping value of a to be transferred into the ALU
+  sig b_reg[16];      //keeping value of b to be transferred into the ALU
 
   always {
 
     case(state){
-      0:
-        a_reg = 16hc8fc;
-        b_reg = 16h3704;
-        alu_lut = 16hdead;
-        z = 1;//z =1;
-        v = 0;
-        n = 0;
-      1:
-        a_reg = 16hc8fc;
-        b_reg = 16hbeef;
-        alu_lut = 16hbeef;
-        z = 1;//z =1;
-        v = 0;
-        n = 0;
-      2:
-        a_reg = 16hc8fc;
-        b_reg = 16hceef;
-        alu_lut = 16hceef;
-        z = 1;//z =1;
-        v = 0;
-        n = 0;
-      3:
-        a_reg = 16hc8fc;
-        b_reg = 16hdee;
-        alu_lut = 16hdeef;
-        z = 1;//z =1;
-        v = 0;
-        n = 0;
-      4:
-        a_reg = 16hc8fc;
-        b_reg = 16h3704;
-        alu_lut = 16heeef;
-        z = 1;//z =1;
-        v = 0;
-        n = 0;
       5: // ADD
         a_reg = 16hc8fc;
         b_reg = 16h3704;
@@ -70,13 +35,8 @@ module true_lut (
         z = 0;
         v = 0;
         n = 0;
-      8: // MOD
-        a_reg = 16h2640;
-        b_reg = 16ha13f;
-        alu_lut = a_reg - ( a_reg/b_reg * b_reg);
-        z = 0;
-        v = 0;
-        n = 0;
+
+      
       9: // AND
         a_reg = 16h310c;
         b_reg = 16h26a0;
@@ -185,7 +145,7 @@ module true_lut (
         n = 0;
         
     }
-    a = a_reg;
-    b = b_reg;
+    a = a_reg;    //assign value into a output
+    b = b_reg;    //assign value into b output
   }
 }

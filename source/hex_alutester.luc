@@ -125,19 +125,8 @@ module hex_alutester (
               }else{
                 fail_counter.d = fail_counter.q + 1;
                 }
-              state_auto.d = state_auto.ADD_4;
-            
-            state_auto.ADD_4:
-              true_lut.state = 8;
-              state_out = 8;
-              alu_simple.alufn = 6h11;
-              data_bus_out =alu_tester_boolean_result.bool_result_out;
-              if (alu_tester_boolean_result.bool_result_out){
-                pass_counter.d = pass_counter.q + 1;
-              }else{
-                fail_counter.d = fail_counter.q + 1;
-                }
               state_auto.d = state_auto.BOOLE_1;
+            
               
             state_auto.BOOLE_1:
               true_lut.state = 9;

@@ -13,7 +13,7 @@ module alu_tester_boolean_result (
 
   sig comp_out_result_sig[19];
   
-  always {
+  always {                                          //compares the output of the ALU with the LUT to determine whether it works correctly
     comp_out_result_sig[18] = (alu_z ~^ lut_z);
     comp_out_result_sig[17] = (alu_v ~^ lut_v);
     comp_out_result_sig[16] = (alu_n ~^ lut_n);

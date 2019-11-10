@@ -28,13 +28,13 @@ module alu_simple (
     cmp.n = add.n;
   
     case(alufn[5:4]){
-      b00:
+      b00:                //add
         alu = add.out;
-      b01:
+      b01:                //boole
         alu = boole.out;
-      b10:
+      b10:                //shift
         alu = shift.out;
-      b11:
+      b11:                //cmp
         alu = cmp.out;
       default:
         alu = 16h0000;

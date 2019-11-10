@@ -18,8 +18,6 @@ module hex_add (
         sum = a - b;            //subtraction
       b10:
         sum = a * b;            //multiplication
-      b11:
-        sum = a - (a / b * b);  //modulo
       default:
         sum = a + b;
       }
